@@ -66,3 +66,14 @@ tic;
 fprintf(s,'SET;39.00')
 pause(.5)
 fread(s,s.BytesAvailable);
+
+%%
+clear all
+addpath('C:\Users\Lea\Documents\GitHub\myown\')
+global s
+s = serial('COM4','BaudRate',19200)
+fopen(s)
+list = randsample(32:45,20,'true');
+runarduino(s,list);
+fclose(s)
+clear all;
