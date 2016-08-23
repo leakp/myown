@@ -1,4 +1,4 @@
-function out = serialcmd(s,cmd,varargin)
+function out = serialcom(s,cmd,varargin)
 % clear buffer by reading potential leftovers
 while s.BytesAvailable ~= 0
     fread(s,s.BytesAvailable);
@@ -9,10 +9,12 @@ if nargin <3
     fprintf(s,cmd);
 elseif nargin == 3
     cmdstr = [cmd ';' num2str(varargin{1})];
-    fprintf(s,cmdstr);pause(.05)
+    fprintf(s,cmdstr);
+    pause(.05)
 end
 try
-    out = char(fread(s,s.BytesAvailable))';
+    out = char(fread(s,s.BytesAvailable))'; %reads as many bytes as stored in buffer
+    pause(.05)
     fprintf('%s \n',out)
 catch
     fprintf('Problem with s.BytesAvailable... \n')
