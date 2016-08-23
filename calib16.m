@@ -39,7 +39,7 @@ for l = list(:)'
 %     pause(Tplateau);
 end
 
-serialcom('SET',baseline,'verbose');
+serialcom(s,'SET',baseline,'verbose');
 fprintf('-----------------------------------------------------\n')
 fprintf('Finished with temperature list, please stop thermode!\n')
 fprintf('-----------------------------------------------------\n')
