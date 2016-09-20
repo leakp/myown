@@ -52,18 +52,21 @@ fprintf(s,'ROR;10.00')
 
 %% test how long sending/reading takes
 fclose(s)
-s.BytesAvailableFcn = '';%@mycallback;
-s.BytesAvailableFcnCount = 52; %DIAG: 68, HELP: 326, START: 6, T: 25, ROR: 18, MOVE: 24, SET: 33.
+s.BytesAvailableFcn = @mycallback;
+s.BytesAvailableFcnCount = 33; %DIAG: 68, HELP: 326, START: 6, T: 25, ROR: 18, MOVE: 24, SET: 33.
 s.BytesAvailableFcnMode  = 'byte';
 fopen(s)
 fprintf(s,'T;32.00');
 fprintf(s,'ROR;10.00');
-fread(s,s.BytesAvailable);
+char(fread(s,s.BytesAvailable))'
 fprintf(s,'DIAG');
 char(fread(s,s.BytesAvailable))'
 global t
 tic;
-fprintf(s,'SET;39.00')
+fprintf(s,'T;10.00')
+if mod(s.ValuesSent,8)==0
+    toc
+end
 pause(.5)
 fread(s,s.BytesAvailable);
 
@@ -73,7 +76,7 @@ addpath('C:\Users\Lea\Documents\GitHub\myown\')
 global s
 s = serial('COM4','BaudRate',19200)
 fopen(s)
-list = randsample(32:45,20,'true');
+list = randsample(32:45,10,'true');
 runarduino(s,list);
 fclose(s)
 clear all;
