@@ -1,10 +1,28 @@
-function runarduino(s,list)
-baseline = 35;
-ROR      = 10;
-Tplateau = 5;
+function runarduino(s,list,varargin)
+% runs temperaturelist using arduino communication (needs script SERIALCOM)
+% usage:
+% RUNARDUINO(s,list,baseline,ror)
+% if baseline & ROR remain undefined, they are set to
+% baseline = 35,
+% ROR = 5;
+%
+% Lea Kampermann, August 2016
+
+if strcmp(s.Status,'closed')
+    fopen(s)
+end
+if nargin == 2
+    baseline = 35;
+    ROR      = 5;
+end
+
+basereturn = 1;
+Tplateau   = 7;
+ISI        = 4;
+
 fprintf('Your temperature list is the following: \n')
 list(:)'
-prompt = 'Press 1 to accept, 0 to enter debugging mode. \n';
+prompt = 'Press 1 to accept, 0 to enter debugging/keyboard mode. \n';
 x = input(prompt);
 if x ==0
     keyboard;
@@ -32,8 +50,12 @@ for l = list(:)'
     fprintf('Starting Trial %02d / %02d with Temp: %5.2f C. \n',c,length(list),l)
     serialcom(s,'SET',l);
     pause(Tplateau);
+    if basereturn
+        serialcom(s,'SET',baseline);
+    end
+    pause(ISI)
 end
-serialcom(s,'SET',baseline,'verbose');
+
 fprintf('-----------------------------------------------------\n')
 fprintf('Finished with temperature list, please stop thermode!\n')
 fprintf('-----------------------------------------------------\n')
